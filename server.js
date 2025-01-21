@@ -1,6 +1,6 @@
 const express = require('express')
 const mysql = require('mysql2')
-const bcryptjs = require('bcryptjs')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const cookieParser = require('cookie-parser')
@@ -18,7 +18,7 @@ dotenv.config();
 const app = express()
 
 
-
+app.use(express.static('public'))//usar css e js
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true})) //bodyParser
 app.use(cookieParser());
@@ -58,7 +58,9 @@ app.get('/cadastra', (req, res) => {
 
 
 
-
+app.get('/inicio',(req,res)=>{
+    res.render('index')// Renderiza a página de inicio 
+})
 
 //----------------- Rota de cadastro-----------------
 
@@ -71,9 +73,85 @@ app.post('/cadastra', (req,res)=>{
     }
 
 
-    db.query('SELECT * FROM usuarios')
+    db.query('SELECT * FROM usuarios WHERE email = ?',[email], async (err, result)=>{
+        if (err) throw err
+        if(result.length > 0){
+            return res.status(400).json({ message: 'Email já está em uso' });
+        }
+
+
+        const hashedPassword = await bcrypt.hash(senha, 10);
+
+
+        db.query('INSERT INTO usuarios (email, senha) VALUES (?, ?)',[email, hashedPassword], (err, result)=>{
+            if (err) throw err
+
+            const token  = jwt.sign({email}, process.env.JWT_SECRET, { expiresIn: '1h'})
+        })
+   
+
+        
+
+
+        
+        
+    
+
+    })
 })
 
+
+
+
+
+// ----------------- Rota de login -----------------
+app.post('/login', (req,res)=>{
+    const {email,senha} = req.body
+
+
+
+    db.query('SELECT * FROM usuarios WHERE email = ?',[email], async (err, results)=>{
+        if (err) return res.status(500).send('Erro no banco de dados')
+        if(results.length === 0) return res.status(400).send('Usuarios não encontrado')
+
+   ;
+       const user = results[0]
+
+    // Verificar senha
+    const match = await bcrypt.compare(senha, user.senha)
+    if(!match) return res.status(400).send('senha incorreta')
+
+    //criar token
+    const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '1d'})
+
+
+    //salvar o token na sessão ou enviar no cookie 
+    res.cookie('auth_token', token, {httpOnly: true, maxAge:3600000}) // 1 hora de validade
+    res.redirect('/inicio')
+
+
+
+
+    
+    })
+})
+
+
+
+
+
+//----------------- Rota de logout -----------------
+app.get('/logout', (req,res)=>{
+    res.clearCookie('auth_token')// Limpar o cookie de autenticação
+    return res.status(200).send('Deslogado com sucesso')
+    res.redirect('/login')
+})
+
+
+app.post('/logout', (req,res)=>{
+    res.clearCookie('auth_token')
+    return res.status(200).send('login')
+})
 
 
 
