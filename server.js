@@ -112,6 +112,7 @@ app.post('/login', (req,res)=>{
 
     db.query('SELECT * FROM usuarios WHERE email = ?',[email], async (err, results)=>{
         if (err) return res.status(500).send('Erro no banco de dados')
+        
         if(results.length === 0) return res.status(400).send('Usuarios não encontrado')
 
    ;

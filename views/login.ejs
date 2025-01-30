@@ -4,14 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!--=============== REMIXICONS ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-        <input type="email" name="email" placeholder="Digite seu e-mail" required>
-        <input type="senha" name="senha" placeholder="Digite sua senha" required>
-        <button type="submit">Login</button>
-    </form>
-    <p>Não tem uma conta? <a href="/cadastra">Cadastre-se aqui</a></p>
+
+
+
+
+<!-- LOGIN SECTION -->
+         
+  
+        
+                    
+                  
+                 
+    
+
+           
+                   
+                
+            
+            
+    
+  
+    
+       
+       <section class="login-section">
+    
+<div class="container-login" id="main">
+    <div class="sing-up">
+        <form action="/login" method="POST" class="login__form">
+                   <h1>Já tem conta</h1>
+                   <div class="social-container">
+                    <a href="#" class="social"><i class="ri-google-fill"></i></a>
+                    <a href="#" class="social"><i class="ri-facebook-fill"></i></a>
+                   </div>
+                   <p>Enter usado seu email e senha</p>
+                   <input type="text" id="email" required name="email" placeholder="Digite seu e-mail" class="login__input">
+                   <input type="password" name="senha" placeholder="Digite sua senha" required class="login__input">
+                       
+                   <a href="#">Esqueceu a senha?</a>
+                   <button type="submit" class="login__button">Login</button>
+                  
+        </form>
+    </div>
+
+
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-acess">
+            <h1>Bem vindo de volta</h1>
+            <p>Não tem conta no nosso site?</p>
+            <button id="singUp"> <a href="/cadastra" class="login__forgot">Cadastre-se agora</a></button>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+
+
+</section>   
+
+
+
+
+
+
+
+
+
 </body>
 </html>
