@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const path = require('path')
-const port = 8083
+const port = 3000
 
 
 
@@ -64,9 +64,17 @@ app.get('/inicio',(req,res)=>{
 
 //----------------- Rota de cadastro-----------------
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|yahoo\.com)$/; //usar pra obrigar a ter que coloca email reais
+
 app.post('/cadastra', (req,res)=>{
     const {email, senha} = req.body
 
+
+    if(!emailRegex.test(email)){
+        return res.status(400).json({message: "E-mail inválido. Utilize um e-mail válido do Gmail, Outlook, Hotmail ou Yahoo.'"})
+    }  
+
+    
 
     if (!email || !senha){
         return res.status(400).json({ message: 'Email e senha são obrigatórios' });
